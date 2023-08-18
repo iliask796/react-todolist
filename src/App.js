@@ -1,5 +1,6 @@
 import './App.css';
 import { useState } from 'react';
+import Task from './Task';
 
 function App() {
   const [tasks,setTasks] = useState([
@@ -9,14 +10,16 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log(event.target[0].value)
-    // TODO add a new taskl to the tasks array
+    // TODO add a new task to the tasks array
     // HINT: Spread the current tasks array into a new array, add this new task on there then update the state of tasks
+    setTasks([...tasks, {text: event.target[0].value, checked: false}])
+    event.target[0].value = ''
   }
 
   const handleDelete = (index) => {
     //TODO Using the provided index, remove the task from the array and update state to re-render the component
     //HINT: .filter()
+    setTasks(tasks.filter(toDoItem => tasks.indexOf(toDoItem) !== index))
   }
 
   const handleUpdate = (index, checked) => {
@@ -24,6 +27,8 @@ function App() {
     //Change the checked property on the task
     //Update the state array to re-render the component
     //HINT: .map() or access by index
+    tasks[index].checked = checked
+    setTasks([...tasks])
   }
 
   return (
@@ -37,11 +42,7 @@ function App() {
       {
         tasks.map((todoItem,index) => {
           return (
-            <div>
-              <span>{todoItem.text}</span>
-              <input onChange={(event) => handleUpdate(index,event.target.checked)} type='checkbox' checked={todoItem.checked} />
-              <small onClick={() => handleDelete(index)}>Delete</small>
-            </div>
+            <Task key={index} todoItem={todoItem} index={index} handleUpdate={handleUpdate} handleDelete={handleDelete}/>
           );
         })
       }
